@@ -7,27 +7,53 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 namespace ConsoleWorldMapPlotter
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //WorldMapPlotter worldMapPlotter = new WorldMapPlotter();
+            // DEBUG HACK -- MAXIMIZE CONSOLE WINDOW
+            Maximize();
 
             WorldMapPlotter.LoadMapFromFile();
             WorldMapPlotter.RunMap();
-            //WorldMapPlotter.StatusUpdate();
 
             Random rnd = new Random();
 
-            // 2 options
+            /*
+            // this simulates plotting single points
             while (true)
             {
-                var x = rnd.Next(0, 30);
-                var y = rnd.Next(0, 30);
+                // maptext is 150x34
+                var x = rnd.Next(0, 150);
+                var y = rnd.Next(0, 34);
 
                 WorldMapPlotter.PlotPoint(x, y);
+
+                Thread.Sleep(100);
+            }
+            */
+
+            // this simulates plotting multiple points
+            while (true)
+            {
+                var pointsToPlot = new List<Tuple<int, int>>();
+
+                // 30 points why not
+                for (int i = 0; i < 30; i++)
+                {
+                    // maptext is 150x34
+                    var x = rnd.Next(0, 150);
+                    var y = rnd.Next(0, 33);
+
+                    pointsToPlot.Add(new Tuple<int, int>(x, y));
+                }
+
+                WorldMapPlotter.PlotPoints(pointsToPlot);
 
                 Thread.Sleep(100);
             }
@@ -37,6 +63,7 @@ namespace ConsoleWorldMapPlotter
 
         public static class WorldMapPlotter
         {
+            private const string AIRCRAFT_ICON = "@";
 
             private static string _mapContents = string.Empty;
 
@@ -74,50 +101,31 @@ namespace ConsoleWorldMapPlotter
                 });
             }
 
-            /*
-            public static void StatusUpdate()
-            {
-                Task.Run(() =>
-                {
-
-                    var whiteSpace = new StringBuilder();
-                    whiteSpace.Append(' ', 10);
-                    var random = new Random();
-                    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                    var randomWord = new string(Enumerable.Repeat(chars, random.Next(10)).Select(s => s[random.Next(s.Length)]).ToArray());
-
-                    while (true)
-                    {
-                        Console.SetCursorPosition(0, 0);
-
-                        var sb = new StringBuilder();
-                        sb.AppendLine($"Program Status:{whiteSpace}");
-                        sb.AppendLine("-------------------------------");
-                        sb.AppendLine($"Last Updated: {DateTime.Now}{whiteSpace}");
-                        sb.AppendLine($"Random Word: {randomWord}{whiteSpace}");
-                        sb.AppendLine("-------------------------------");
-
-                        ConsoleWriter.Write(sb.ToString());
-
-                        Thread.Sleep(1000);
-                    }
-                });
-            }
-            */
-
             public static void PlotPoint(int x, int y)
             {
-                var toPlot = new Tuple<string, int, int>("@", x, y);
+                var toPlot = new Tuple<string, int, int>(AIRCRAFT_ICON, x, y);
 
                 ConsoleWriter.Write(toPlot);
+            }
+
+            public static void PlotPoints(List<Tuple<int,int>> pointsToPlot)
+            {
+                foreach (var pointToPlot in pointsToPlot)
+                {
+                    var toPlot = 
+                        new Tuple<string, int, int>(
+                            AIRCRAFT_ICON, 
+                            pointToPlot.Item1, 
+                            pointToPlot.Item2
+                        );
+
+                    ConsoleWriter.Write(toPlot);
+                }
             }
         }
 
         public static class ConsoleWriter
         {
-            //private static BlockingCollection<string> writeLines = 
-            //    new BlockingCollection<string>();
-
             private static BlockingCollection<Tuple<string, int, int>> writes =
                 new BlockingCollection<Tuple<string, int, int>>();
 
@@ -135,31 +143,24 @@ namespace ConsoleWorldMapPlotter
                     }
 
                 });
-
-                /*
-                Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        Console.WriteLine(writes.Take());
-                    }
-
-                });
-                */
             }
-
-            /*
-            public static void WriteLine(string value)
-            {
-                writeLines.Add(value);
-            }
-            */
 
             public static void Write(Tuple<string, int, int> value)
             {
                 writes.Add(value);
             }
 
+        }
+
+        // BELOW IS JUST A DEBUG HACK TO MAXIMIZE THE CONSOLE
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(System.IntPtr hWnd, int cmdShow);
+
+        private static void Maximize()
+        {
+            Process p = Process.GetCurrentProcess();
+            ShowWindow(p.MainWindowHandle, 3); //SW_MAXIMIZE = 3
         }
     }
 }
