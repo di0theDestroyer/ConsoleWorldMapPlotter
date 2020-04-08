@@ -62,7 +62,7 @@ namespace ConsoleWorldMapPlotter
 
         public static class WorldMapPlotter
         {
-            private const string AIRCRAFT_ICON = "@";
+            public const string AIRCRAFT_ICON = "@";
 
             private static string _mapContents = string.Empty;
 
@@ -137,6 +137,18 @@ namespace ConsoleWorldMapPlotter
                         var toWrite = writes.Take();
 
                         Console.SetCursorPosition(toWrite.Item2, toWrite.Item3);
+
+                        // change aircraft icon red
+                        if (toWrite.Item1 == WorldMapPlotter.AIRCRAFT_ICON)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+
+                            Console.Write(toWrite.Item1);
+
+                            Console.ResetColor();
+
+                            continue;
+                        }
 
                         Console.Write(toWrite.Item1);
                     }
