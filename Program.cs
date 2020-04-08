@@ -29,7 +29,7 @@ namespace ConsoleWorldMapPlotter
 
                 WorldMapPlotter.PlotPoint(x, y);
 
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
 
             Console.Read();
@@ -67,7 +67,7 @@ namespace ConsoleWorldMapPlotter
 
                         var x = rnd.Next(0, 30);
                         var y = rnd.Next(0, 30);
-                        PlotPoint(x , y);
+                        //PlotPoint(x , y);
 
                         Thread.Sleep(1000);
                     }
