@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace ConsoleWorldMapPlotter
 {
@@ -25,6 +22,7 @@ namespace ConsoleWorldMapPlotter
             Random rnd = new Random();
 
             /*
+            // COMING FROM ANOTHER THREAD
             // this simulates plotting single points
             while (true)
             {
@@ -38,13 +36,14 @@ namespace ConsoleWorldMapPlotter
             }
             */
 
+            // COMING FROM ANOTHER THREAD
             // this simulates plotting multiple points
             while (true)
             {
                 var pointsToPlot = new List<Tuple<int, int>>();
 
                 // 30 points why not
-                for (int i = 0; i < 30; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     // maptext is 150x34
                     var x = rnd.Next(0, 150);
