@@ -22,45 +22,29 @@ namespace ConsoleWorldMapPlotter
         private static CancellationTokenSource _mapRunnerTaskCts;
         private static CancellationTokenSource _pointPlotterTaskCts;
 
-        private static bool _mapIsRunning = false;
-        private static bool _atSplashScreen = true;
         private static bool _userInputPromptDisplayed = false;
 
         static void Main(string[] args)
         {
             // DEBUG HACK -- MAXIMIZE CONSOLE WINDOW
-            // TODO: Configure screen size
-            Maximize();
+            // TODO: Configure screen size on app startup
             //Console.SetWindowSize(150, 60);
-
+            Maximize();
 
             // awww yea. doItSlow.
             SplashScreen.Display(doItSlow: true);
-
-
 
             // let's start things off right and get the callsign!
             // note: all user input after this is handled with flags
             //       in handleUserInput() and helper methods
             _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
 
-            //Infinite loop to contiously keep reading in user input for callsign and time interval.
+            //Infinite loop that allows the user to switch back and forth
+            //  between the splash screen and mapping dialogs
             while (true)
             {
-                /*
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine("============================================================================");
-                Console.WriteLine("Aircraft Callsign: ");
-                CallSign = Console.ReadLine();
-                Console.WriteLine("AFTime Range: ");
-                TimeInterval = Console.ReadLine();
-                Console.WriteLine("============================================================================");
-                */
-
                 handleUserInput();
             }
-
-            Console.Read();
         }
 
         public static void handleUserInput()
@@ -153,8 +137,6 @@ namespace ConsoleWorldMapPlotter
                 // user must want a map
                 createMapRunnerTask();
 
-                _atSplashScreen = false;
-
                 // let user hit [ENTER] to kill the map
                 _mappingInputTask = AsyncConsoleReader.ReadLine();
             }
@@ -174,7 +156,6 @@ namespace ConsoleWorldMapPlotter
                     // cancel mapping and point plotting tasks
                     _mapRunnerTaskCts.Cancel();
                     _pointPlotterTaskCts.Cancel();
-                    _mapIsRunning = false;
                     _mappingInputTask = null;
 
                     // redisplay the start screen, but let's not take our time about it
@@ -185,10 +166,6 @@ namespace ConsoleWorldMapPlotter
                     _aircraftCallsignInputCursorSet = false;
                     _afTimeRangeInputCursorSet = false;
                     displayUserInputPrompt();
-
-                    //Console.CursorVisible = true;
-
-                    _atSplashScreen = true;
 
                     // need this to be null for above conditional to work
                     _afTimeRangeInputTask = null;
@@ -216,8 +193,6 @@ namespace ConsoleWorldMapPlotter
                 _pointPlotterTaskCts.Token, 
                 useLatLongGenerator: true
             );
-
-            _mapIsRunning = true;
         }
 
         // EVERYTHING BELOW IS JUST A DEBUG HACK TO MAXIMIZE THE CONSOLE -- NOT NECESSARY IN PROD CODE
