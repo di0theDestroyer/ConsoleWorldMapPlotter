@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleWorldMapPlotter
 {
-    public static class PlaneDataProvider_Example
+    public static class PlaneDataProvider_Test
     {
         public static void Go()
         {

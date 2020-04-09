@@ -7,7 +7,18 @@ namespace ConsoleWorldMapPlotter
 {
     public static class WorldMapPlotter_GenerateData
     {
-        public static void Generate(CancellationToken cancel, bool useLatLongGenerator)
+        public static void GenerateRealData(
+            PlaneDataProvider planeDataProvider, 
+            string aircraftCallsign, 
+            string afStartTime, 
+            string afEndTime
+        )
+        {
+            // for PoC, just do lat, longs, on map and in metadatatable
+
+        }
+
+        public static void GenerateDummyData(CancellationToken cancel, bool useLatLongGenerator)
         {
             var pointsToPlot = new List<Tuple<int, int>>();
 
@@ -31,11 +42,12 @@ namespace ConsoleWorldMapPlotter
                 double centerLat = 0;
                 double centerLong = 0;
 
-                var coordinates = worldMapPositionConverter.Convert(
-                    latLongs, 
-                    out centerLat, 
-                    out centerLong
-                );
+                var coordinates = 
+                    worldMapPositionConverter.Convert(
+                        latLongs, 
+                        out centerLat, 
+                        out centerLong
+                    );
 
 
                 foreach (var coordinate in coordinates)
