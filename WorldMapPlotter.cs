@@ -22,6 +22,32 @@ namespace ConsoleWorldMapPlotter
             _mapContents = File.ReadAllText(filePath);
         }
 
+        public static void UpdateMapMetaData(string callsign, string afTimeRange, double latitude, double longitude)
+        {
+            Tuple<string, int, int> metatDataText = null;
+
+            // show callsign
+            // coords 1, 36
+            var callsignText = "CALLSIGN:        " + callsign;
+            metatDataText = new Tuple<string, int, int>(callsignText, 1, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show AFTime range
+            var afTimeRangeText = "AF TIME RANGE:   " + afTimeRange;
+            metatDataText = new Tuple<string, int, int>(afTimeRangeText, 1, 37);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show current latitude
+            var latitudeText = "LATITUDE:    " + latitude.ToString("0.00000");
+            metatDataText = new Tuple<string, int, int>(latitudeText, 40, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show current longitude
+            var longitudeText = "LONGITUDE:   " + longitude.ToString("0.00000");
+            metatDataText = new Tuple<string, int, int>(longitudeText, 40, 37);
+            AsyncConsoleWriter.Write(metatDataText);
+        }
+
         public static void RunMap(CancellationToken cancelToken)
         {
             bool mapDrawn = false;

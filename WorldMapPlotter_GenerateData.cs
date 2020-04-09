@@ -102,8 +102,12 @@ namespace ConsoleWorldMapPlotter
                                     pointToPlot.Item1,
                                     pointToPlot.Item2
                                 );
-                            }
 
+
+                                // update the lower part of the screen
+                                WorldMapPlotter.UpdateMapMetaData("somecallsign", "sometimerange", 10.0000, -10.0000);
+                            }
+                            
                             Thread.Sleep(700);
                         }
                     }
