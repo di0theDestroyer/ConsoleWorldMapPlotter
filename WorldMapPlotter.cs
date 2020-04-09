@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +9,7 @@ namespace ConsoleWorldMapPlotter
     public static class WorldMapPlotter
     {
         public const string AIRCRAFT_ICON = "@";
+        public const int MAP_REDRAW_FREQUENCY = 1000; // milliseconds
 
         private static string _mapContents = string.Empty;
 
@@ -21,29 +20,32 @@ namespace ConsoleWorldMapPlotter
             _mapContents = File.ReadAllText(filePath);
         }
 
-
-        public static void DrawMap()
-        {
-            //ConsoleWriter.WriteLine(_mapContents);
-        }
-
-        public static void RunMap()
+        public static void RunMap(CancellationToken cancelToken)
         {
             Task.Run(() =>
             {
+
                 Random rnd = new Random();
 
                 while (true)
                 {
-                    var toDraw = new Tuple<string, int, int>(_mapContents, 0, 0);
+                    if (!cancelToken.IsCancellationRequested)
+                    {
+                        // draw the map at 0,0
+                        var toDraw = new Tuple<string, int, int>(_mapContents, 0, 0);
 
-                    AsyncConsoleWriter.Write(toDraw);
+                        AsyncConsoleWriter.Write(toDraw);
 
-                    var x = rnd.Next(0, 30);
-                    var y = rnd.Next(0, 30);
-                    //PlotPoint(x , y);
+                        Thread.Sleep(MAP_REDRAW_FREQUENCY);
 
-                    Thread.Sleep(1000);
+                        // go back to home screen if user hits enter
+                    }
+                    else
+                    {
+                        // TODO: cleanup task or it runs forever without doing anything
+                        // return and break give error
+                        return;
+                    }
                 }
             });
         }

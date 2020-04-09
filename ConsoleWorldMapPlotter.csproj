@@ -46,6 +46,8 @@
     <Compile Include="AsyncConsoleWriter.cs" />
     <Compile Include="Coordinates.cs" />
     <Compile Include="LatLong.cs" />
+    <Compile Include="SplashScreen.cs" />
+    <Compile Include="AsyncConsoleReader.cs" />
     <Compile Include="WorldMapPlotter_GenerateData.cs" />
     <Compile Include="WorldMapPositionConverter.cs" />
     <Compile Include="WorldMapPositionConverter_GenerateData.cs" />
