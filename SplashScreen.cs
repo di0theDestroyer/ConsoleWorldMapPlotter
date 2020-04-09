@@ -14,6 +14,9 @@ namespace ConsoleWorldMapPlotter
             // get those nice defaults back
             Utilities.ResetConsoleDefaults();
 
+            // make the cursor invisible until after splash screen load
+            Console.CursorVisible = false;
+
             List<string> piInSkyLogo = new List<string>()
                 {
                     @"                          ___                                          ___     ",
@@ -93,6 +96,9 @@ namespace ConsoleWorldMapPlotter
                 Console.WriteLine(member);
                 Thread.Sleep(100);
             }
+
+            // make the cursor visible again after the splash screen loads
+            Console.CursorVisible = true;
         }
 
     }

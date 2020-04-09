@@ -29,6 +29,9 @@ namespace ConsoleWorldMapPlotter
             // get those nice defaults back
             Utilities.ResetConsoleDefaults();
 
+            // and get rid of that blinky cursor
+            Console.CursorVisible = false;
+
             Task.Run(() =>
             {
 

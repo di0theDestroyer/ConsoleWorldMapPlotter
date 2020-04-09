@@ -76,9 +76,6 @@ namespace ConsoleWorldMapPlotter
                 {
                     if (!cancel.IsCancellationRequested)
                     {
-
-
-
                         if (!useLatLongGenerator)
                         {
                             // let's just get random
@@ -99,10 +96,13 @@ namespace ConsoleWorldMapPlotter
 
                         foreach (var pointToPlot in pointsToPlot)
                         {
-                            WorldMapPlotter.PlotPoint(
-                                pointToPlot.Item1, 
-                                pointToPlot.Item2
-                            );
+                            if (!cancel.IsCancellationRequested)
+                            {
+                                WorldMapPlotter.PlotPoint(
+                                    pointToPlot.Item1,
+                                    pointToPlot.Item2
+                                );
+                            }
 
                             Thread.Sleep(700);
                         }

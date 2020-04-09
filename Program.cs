@@ -28,8 +28,11 @@ namespace ConsoleWorldMapPlotter
             Maximize();
             //Console.SetWindowSize(150, 60);
 
+
             // awww yea. doItSlow.
             SplashScreen.Display(doItSlow: true);
+
+
 
             // let's start things off right and get the callsign!
             // note: all user input after this is handled with flags
@@ -83,6 +86,8 @@ namespace ConsoleWorldMapPlotter
 
                     // redisplay the start screen, but let's not take our time about it
                     SplashScreen.Display(doItSlow: false);
+
+                    Console.CursorVisible = true;
 
                     _atSplashScreen = true;
 
