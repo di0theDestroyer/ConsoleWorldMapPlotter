@@ -39,7 +39,7 @@ namespace ConsoleWorldMapPlotter
 
             // show afEndTime
             var afEndTimeText = "AF END TIME:     " + afEndTime;
-            metatDataText = new Tuple<string, int, int>(afEndTimeText, 1, 37);
+            metatDataText = new Tuple<string, int, int>(afEndTimeText, 1, 38);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current latitude

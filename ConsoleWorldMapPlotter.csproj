@@ -50,6 +50,7 @@
     <Compile Include="AsyncConsoleWriter.cs" />
     <Compile Include="Coordinates.cs" />
     <Compile Include="LatLong.cs" />
+    <Compile Include="PlaneDataPacket.cs" />
     <Compile Include="PlaneDataProvider.cs" />
     <Compile Include="PlaneDataProvider_Test.cs" />
     <Compile Include="SplashScreen.cs" />
