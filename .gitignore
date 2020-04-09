@@ -6,3 +6,4 @@
 *.ide-wal
 bin/
 obj/
+.vs/

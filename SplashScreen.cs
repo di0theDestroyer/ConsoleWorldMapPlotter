@@ -11,6 +11,8 @@ namespace ConsoleWorldMapPlotter
     {
         public static void Display(bool doItSlow)
         {
+            Console.SetCursorPosition(0, 0);
+
             List<string> piInSkyLogo = new List<string>()
                 {
                     @"                          ___                                          ___     ",

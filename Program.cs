@@ -13,8 +13,11 @@ namespace ConsoleWorldMapPlotter
 
         private static Task<string> _userInputTask;
 
-        private static Task _mapRunnerTask;
         private static CancellationTokenSource _mapRunnerTaskCts;
+        private static CancellationTokenSource _pointPlotterTaskCts;
+
+        private static bool _mapIsRunning = false;
+        private static bool _atSplashScreen = true;
 
         static void Main(string[] args)
         {
@@ -24,13 +27,13 @@ namespace ConsoleWorldMapPlotter
 
             _userInputTask = AsyncConsoleReader.ReadLine();
 
-            //SplashScreen.Display(doItSlow: true);
+            SplashScreen.Display(doItSlow: true);
 
-            createMapRunnerTask();
-            WorldMapPlotter_GenerateData.Generate();
+            //createMapRunnerTask();
+            //WorldMapPlotter_GenerateData.Generate();
 
             //Infinite loop to contiously keep reading in user input for callsign and time interval.
-            while (false)
+            while (true)
             {
 
                 /*
@@ -53,35 +56,42 @@ namespace ConsoleWorldMapPlotter
                     // so let's redisplay the splash screen, and cancel mapping tasks
                     if (_userInputTask.Result == "")
                     {
-                        // cancel mapping tasks
+                        // cancel mapping and point plotting tasks
                         _mapRunnerTaskCts.Cancel();
-
-                        // important to set task to null since we check below
-                        _mapRunnerTask = null;
+                        _pointPlotterTaskCts.Cancel();
+                        _mapIsRunning = false;
 
                         // redisplay the start screen, but let's not take our time about it
                         SplashScreen.Display(doItSlow: false);
+
+                        _atSplashScreen = true;
+
+                        // capture user commands again
+                        _userInputTask = AsyncConsoleReader.ReadLine();
                     }
                     else
                     {
                         // user must want a map
                         createMapRunnerTask();
 
-                        // DEBUG -- leave it commented.
-                        WorldMapPlotter_GenerateData.Generate();
+                        _atSplashScreen = false;
+
+                        // let user hit [ENTER] to kill the map
+                        _userInputTask = AsyncConsoleReader.ReadLine();
                     }
 
                 }
                 else
                 {
-                    // if mapping tasks are !null, then don't create them again
-                    //   because the mapping feature is probably already running,
-                    //   but, otherwise create them
-                    if (_mapRunnerTask != null)
+                    if (!_mapIsRunning && !_atSplashScreen)
                     {
+                        // if mapping tasks are !null, then don't create them again
+                        //   because the mapping feature is probably already running,
+                        //   but, otherwise create them
                         createMapRunnerTask();
-                    }
 
+                        _atSplashScreen = false;
+                    }
 
                 }
 
@@ -100,13 +110,20 @@ namespace ConsoleWorldMapPlotter
 
         public static void createMapRunnerTask()
         {
+            // initialize the cancellation routine, so we can make it all stop
             _mapRunnerTaskCts = new CancellationTokenSource();
+            _pointPlotterTaskCts = new CancellationTokenSource();
 
             // reload the map from file (basically initializes the static class -- bleh. TODO: fix that)
             WorldMapPlotter.LoadMapFromFile();
 
             // run that map
             WorldMapPlotter.RunMap(_mapRunnerTaskCts.Token);
+
+            // DEBUG -- leave it commented.
+            WorldMapPlotter_GenerateData.Generate(_pointPlotterTaskCts.Token);
+
+            _mapIsRunning = true;
         }
 
 
