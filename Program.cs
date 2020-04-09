@@ -49,8 +49,8 @@ namespace ConsoleWorldMapPlotter
             
             // DEBUG HACK -- MAXIMIZE CONSOLE WINDOW
             // TODO: Configure screen size on app startup
-            //Console.SetWindowSize(150, 60);
-            Maximize();
+            Console.SetWindowSize(151, 48);
+            //Maximize();
 
             // awww yea. doItSlow.
             SplashScreen.Display(doItSlow: true);
