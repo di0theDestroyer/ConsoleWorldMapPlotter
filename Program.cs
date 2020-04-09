@@ -239,7 +239,12 @@ namespace ConsoleWorldMapPlotter
             {
                 // real data
 
-                WorldMapPlotter_GenerateData.GenerateRealData(_planeDataProvider, _aircraftCallsign, _afStartTime, _afEndTime);
+                WorldMapPlotter_GenerateData.GenerateRealData(
+                    _planeDataProvider, 
+                    _aircraftCallsign, 
+                    _afStartTime, 
+                    _afEndTime
+                );
             }
             else
             {
