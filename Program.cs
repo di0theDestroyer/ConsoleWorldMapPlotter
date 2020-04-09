@@ -26,6 +26,7 @@ namespace ConsoleWorldMapPlotter
         private static Task<string> _mappingInputTask;
         private static CancellationTokenSource _mapRunnerTaskCts;
         private static CancellationTokenSource _pointPlotterTaskCts;
+        private static bool _isMappingStarted;
 
         private static PlaneDataProvider _planeDataProvider;
 
@@ -116,25 +117,21 @@ namespace ConsoleWorldMapPlotter
 
         public static void handleAircraftCallsignInput()
         {
-            if (_aircraftCallsignInputTask.IsCompleted
-                && _afStartTimeInputTask == null)
-            {
-                // looks like we just got the callsign from the user
-                _aircraftCallsign = _aircraftCallsignInputTask.Result;
 
-                // now, let's get the afStartTime
-                _afStartTimeInputTask = AsyncConsoleReader.ReadLine();
-            }
-
-            // put the cursor in the correct spot for user input (afStartTime)
             if (_aircraftCallsignInputTask.IsCompleted
-                && _afStartTimeInputTask != null
-                && !_afStartTimeInputTask.IsCompleted
+                && _afStartTimeInputTask == null
                 && !_afStartTimeInputCursorSet)
             {
                 // TODO: hack to overcome race condition of AsyncConsoleWriter
                 Thread.Sleep(200);
 
+                // looks like we just got the callsign from the user
+                _aircraftCallsign = _aircraftCallsignInputTask.Result;
+
+                // now, let's get the afStartTime
+                _afStartTimeInputTask = AsyncConsoleReader.ReadLine();
+
+                // put the cursor in the correct spot for user input (afStartTime)
                 Console.SetCursorPosition(24, 46);
 
                 // make the cursor visible again after the splash screen loads
@@ -149,54 +146,55 @@ namespace ConsoleWorldMapPlotter
         public static void handleAfStartTimeInput()
         {
             if (_aircraftCallsignInputTask.IsCompleted
-                && _afStartTimeInputTask != null
                 && _afStartTimeInputTask.IsCompleted
+                && _afEndTimeInputTask == null
+                && !_afEndTimeInputCursorSet
             )
             {
                 // looks like we just got the afStartTime from the user
+                //   -- inside conditional so it only assigns once
                 _afStartTime = _afStartTimeInputTask.Result;
 
+                // now, let's get the afEndTime
+                _afEndTimeInputTask = AsyncConsoleReader.ReadLine();
+
                 // put the cursor in the correct spot for user input (afEndTime)
-                if (!_afEndTimeInputCursorSet)
-                {
-                    // now, let's get the afEndTime
-                    _afEndTimeInputTask = AsyncConsoleReader.ReadLine();
+                Console.SetCursorPosition(24, 47);
 
-                    // TODO: hack to overcome race condition of AsyncConsoleWriter
-                    Thread.Sleep(200);
+                // make the cursor visible again after the splash screen loads
+                //   and after we've already set the cursor position, otherwise
+                //   the user will see it jump.
+                Console.CursorVisible = true;
 
-                    Console.SetCursorPosition(24, 47);
-
-                    // make the cursor visible again after the splash screen loads
-                    //   and after we've already set the cursor position, otherwise
-                    //   the user will see it jump.
-                    Console.CursorVisible = true;
-
-                    _afEndTimeInputCursorSet = true;
-                }
+                _afEndTimeInputCursorSet = true;
             }
         }
 
         public static void handleAfEndTimeInput()
         {
             if (_aircraftCallsignInputTask.IsCompleted
+                && _afStartTimeInputTask != null
                 && _afStartTimeInputTask.IsCompleted
                 && _afEndTimeInputTask != null
                 && _afEndTimeInputTask.IsCompleted
-                && _mappingInputTask == null)
+            )
             {
                 //START MAP LOGIC
+                if (!_isMappingStarted)
+                {
+                    // looks like we just got the afTimeRange from the user
+                    _afEndTime = _afEndTimeInputTask.Result;
 
-                // looks like we just got the afTimeRange from the user
-                _afEndTime = _afEndTimeInputTask.Result;
+                    // that completes our input requirements, sooooooo
 
-                // that completes our input requirements, sooooooo
+                    // user must want a map
+                    createMapRunnerTask();
 
-                // user must want a map
-                createMapRunnerTask();
+                    // let user hit [ENTER] to kill the map
+                    _mappingInputTask = AsyncConsoleReader.ReadLine();
 
-                // let user hit [ENTER] to kill the map
-                _mappingInputTask = AsyncConsoleReader.ReadLine();
+                    _isMappingStarted = true;
+                }
             }
         }
 
@@ -219,17 +217,8 @@ namespace ConsoleWorldMapPlotter
                     // redisplay the start screen, but let's not take our time about it
                     SplashScreen.Display(doItSlow: false);
 
-                    // gotta display the user prompt again
-                    _userInputPromptDisplayed = false;
-                    _aircraftCallsignInputCursorSet = false;
-                    _afStartTimeInputCursorSet = false;
-                    displayUserInputPrompt();
-
-                    // need this to be null for above conditional to work
-                    _afStartTimeInputTask = null;
-
-                    // capture user commands again
-                    _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
+                    // gotta display the user prompt again, and reset flags
+                    resetUserInputPrompt();
                 }
             }
         }
@@ -261,6 +250,28 @@ namespace ConsoleWorldMapPlotter
                     useLatLongGenerator: true
                 );
             }
+        }
+
+        public static void resetUserInputPrompt()
+        {
+            // reset all the input flow flags
+            _userInputPromptDisplayed = false;
+            _aircraftCallsignInputCursorSet = false;
+            _afStartTimeInputCursorSet = false;
+            _afEndTimeInputCursorSet = false;
+            _isMappingStarted = false;
+
+            // display the prompt
+            displayUserInputPrompt();
+
+            // reset these since conditionals depend on null
+            _aircraftCallsignInputTask = null;
+            _afStartTimeInputTask = null;
+            _afEndTimeInputTask = null;
+            _mappingInputTask = null;
+
+            // capture user commands again
+            _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
         }
 
         // EVERYTHING BELOW IS JUST A DEBUG HACK TO MAXIMIZE THE CONSOLE -- NOT NECESSARY IN PROD CODE
