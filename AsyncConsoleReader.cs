@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleWorldMapPlotter
@@ -10,7 +7,15 @@ namespace ConsoleWorldMapPlotter
     {
         public static Task<string> ReadLine()
         {
-            return Task.Run(() => Console.ReadLine());
+            return Task.Run(() =>
+            {
+                var userInput = Console.ReadLine();
+
+                // make cursor invisible after input, so we can rehome it in calling logic
+                Console.CursorVisible = false;
+
+                return userInput;
+            });
         }
     }
 }

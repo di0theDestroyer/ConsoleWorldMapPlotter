@@ -96,10 +96,6 @@ namespace ConsoleWorldMapPlotter
                 Console.WriteLine(member);
                 Thread.Sleep(100);
             }
-
-            // make the cursor visible again after the splash screen loads
-            Console.CursorVisible = true;
         }
-
     }
 }

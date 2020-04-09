@@ -12,7 +12,11 @@ namespace ConsoleWorldMapPlotter
         private static string _afTimeRange = string.Empty;
 
         private static Task<string> _aircraftCallsignInputTask;
+        private static bool _aircraftCallsignInputCursorSet;
+
         private static Task<string> _afTimeRangeInputTask;
+        private static bool _afTimeRangeInputCursorSet;
+
         private static Task<string> _mappingInputTask;
 
         private static CancellationTokenSource _mapRunnerTaskCts;
@@ -20,6 +24,7 @@ namespace ConsoleWorldMapPlotter
 
         private static bool _mapIsRunning = false;
         private static bool _atSplashScreen = true;
+        private static bool _userInputPromptDisplayed = false;
 
         static void Main(string[] args)
         {
@@ -60,6 +65,8 @@ namespace ConsoleWorldMapPlotter
 
         public static void handleUserInput()
         {
+            displayUserInputPrompt();
+
             handleAircraftCallsignInput();
 
             handleAfTimeRangeInput();
@@ -67,36 +74,34 @@ namespace ConsoleWorldMapPlotter
             handleMappingInput();
         }
 
-        public static void handleMappingInput()
+        public static void displayUserInputPrompt()
         {
-            // HANDLE MAP INPUT
-            if (_mappingInputTask != null
-                && _mappingInputTask.IsCompleted)
+            if (!_userInputPromptDisplayed)
             {
-                // EXIT MAP LOGIC
-                // -- only [ENTER] key was pressed without any textual input,
-                // so let's redisplay the splash screen, and cancel mapping tasks
-                if (_mappingInputTask.Result == "")
-                {
-                    // cancel mapping and point plotting tasks
-                    _mapRunnerTaskCts.Cancel();
-                    _pointPlotterTaskCts.Cancel();
-                    _mapIsRunning = false;
-                    _mappingInputTask = null;
+                var callsignPrompt = new Tuple<string, int, int>("Aircraft Callsign ----> ", 0, 45);
+                AsyncConsoleWriter.Write(callsignPrompt);
 
-                    // redisplay the start screen, but let's not take our time about it
-                    SplashScreen.Display(doItSlow: false);
+                var afTimeRangePrompt = new Tuple<string, int, int>("AF Time Range --------> ", 0, 46);
+                AsyncConsoleWriter.Write(afTimeRangePrompt);
 
-                    Console.CursorVisible = true;
+                _userInputPromptDisplayed = true;
+            }
 
-                    _atSplashScreen = true;
+            // put the cursor in the correct spot for user input
+            if (!_aircraftCallsignInputTask.IsCompleted
+                && !_aircraftCallsignInputCursorSet)
+            {
+                // TODO: hack to overcome race condition of AsyncConsoleWriter
+                Thread.Sleep(200);
 
-                    // need this to be null for above conditional to work
-                    _afTimeRangeInputTask = null;
+                Console.SetCursorPosition(24, 45);
 
-                    // capture user commands again
-                    _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
-                }
+                // make the cursor visible again after the splash screen loads
+                //   and after we've already set the cursor position, otherwise
+                //   the user will see it jump.
+                Console.CursorVisible = true;
+
+                _aircraftCallsignInputCursorSet = true;
             }
         }
 
@@ -110,6 +115,24 @@ namespace ConsoleWorldMapPlotter
 
                 // now, let's get the afTimeRange
                 _afTimeRangeInputTask = AsyncConsoleReader.ReadLine();
+            }
+
+            // put the cursor in the correct spot for user input
+            if (_aircraftCallsignInputTask.IsCompleted
+                && !_afTimeRangeInputTask.IsCompleted
+                && !_afTimeRangeInputCursorSet)
+            {
+                // TODO: hack to overcome race condition of AsyncConsoleWriter
+                Thread.Sleep(200);
+
+                Console.SetCursorPosition(24, 46);
+
+                // make the cursor visible again after the splash screen loads
+                //   and after we've already set the cursor position, otherwise
+                //   the user will see it jump.
+                Console.CursorVisible = true;
+
+                _afTimeRangeInputCursorSet = true;
             }
         }
 
@@ -134,6 +157,45 @@ namespace ConsoleWorldMapPlotter
 
                 // let user hit [ENTER] to kill the map
                 _mappingInputTask = AsyncConsoleReader.ReadLine();
+            }
+        }
+
+        public static void handleMappingInput()
+        {
+            // HANDLE MAP INPUT
+            if (_mappingInputTask != null
+                && _mappingInputTask.IsCompleted)
+            {
+                // EXIT MAP LOGIC
+                // -- only [ENTER] key was pressed without any textual input,
+                // so let's redisplay the splash screen, and cancel mapping tasks
+                if (_mappingInputTask.Result == "")
+                {
+                    // cancel mapping and point plotting tasks
+                    _mapRunnerTaskCts.Cancel();
+                    _pointPlotterTaskCts.Cancel();
+                    _mapIsRunning = false;
+                    _mappingInputTask = null;
+
+                    // redisplay the start screen, but let's not take our time about it
+                    SplashScreen.Display(doItSlow: false);
+
+                    // gotta display the user prompt again
+                    _userInputPromptDisplayed = false;
+                    _aircraftCallsignInputCursorSet = false;
+                    _afTimeRangeInputCursorSet = false;
+                    displayUserInputPrompt();
+
+                    //Console.CursorVisible = true;
+
+                    _atSplashScreen = true;
+
+                    // need this to be null for above conditional to work
+                    _afTimeRangeInputTask = null;
+
+                    // capture user commands again
+                    _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
+                }
             }
         }
 
