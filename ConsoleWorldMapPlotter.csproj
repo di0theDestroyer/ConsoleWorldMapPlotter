@@ -51,6 +51,7 @@
     <Compile Include="Coordinates.cs" />
     <Compile Include="LatLong.cs" />
     <Compile Include="PlaneDataProvider.cs" />
+    <Compile Include="PlaneDataProvider_Example.cs" />
     <Compile Include="SplashScreen.cs" />
     <Compile Include="AsyncConsoleReader.cs" />
     <Compile Include="Utilities.cs" />
