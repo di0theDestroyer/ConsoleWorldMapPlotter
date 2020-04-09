@@ -46,7 +46,7 @@ namespace ConsoleWorldMapPlotter
             _db = _piSystem.Databases["ADSB"];
             _planeElement = _db.Elements["Planes"];
 
-            GetCallSignNames(true);
+            //GetCallSignNames(true);
         }
 
         public bool Initialized { get; private set; } = false;

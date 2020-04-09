@@ -21,7 +21,8 @@ namespace ConsoleWorldMapPlotter
             // then later, add more cool metadata
             //
 
-
+            // MUST change default Data Archive server in PSE >> File >> Connections,
+            //   or this will fail
             IDictionary<DateTime, Dictionary<string,string>> planeData = 
                 planeDataProvider.GetPlaneDataInInterval(
                     aircraftCallsign, 

@@ -29,27 +29,27 @@ namespace ConsoleWorldMapPlotter
             // show callsign
             // coords 1, 36
             var callsignText = "CALLSIGN:        " + callsign;
-            metatDataText = new Tuple<string, int, int>(callsignText, 1, 36);
+            metatDataText = new Tuple<string, int, int>(callsignText, 10, 36);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show afStartTime
             var afStartTimeText = "AF START TIME:   " + afStartTime;
-            metatDataText = new Tuple<string, int, int>(afStartTimeText, 1, 37);
+            metatDataText = new Tuple<string, int, int>(afStartTimeText, 10, 38);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show afEndTime
             var afEndTimeText = "AF END TIME:     " + afEndTime;
-            metatDataText = new Tuple<string, int, int>(afEndTimeText, 1, 38);
+            metatDataText = new Tuple<string, int, int>(afEndTimeText, 10, 40);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current latitude
             var latitudeText = "LATITUDE:    " + latitude.ToString("0.00000");
-            metatDataText = new Tuple<string, int, int>(latitudeText, 40, 36);
+            metatDataText = new Tuple<string, int, int>(latitudeText, 60, 36);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current longitude
             var longitudeText = "LONGITUDE:   " + longitude.ToString("0.00000");
-            metatDataText = new Tuple<string, int, int>(longitudeText, 40, 37);
+            metatDataText = new Tuple<string, int, int>(longitudeText, 60, 38);
             AsyncConsoleWriter.Write(metatDataText);
         }
 
