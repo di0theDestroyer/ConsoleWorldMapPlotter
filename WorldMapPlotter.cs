@@ -26,30 +26,43 @@ namespace ConsoleWorldMapPlotter
         {
             Tuple<string, int, int> metatDataText = null;
 
+
             // show callsign
             // coords 1, 36
             var callsignText = "CALLSIGN:        " + callsign;
-            metatDataText = new Tuple<string, int, int>(callsignText, 10, 36);
+            metatDataText = new Tuple<string, int, int>(callsignText, 11, 36);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show afStartTime
-            var afStartTimeText = "AF START TIME:   " + afStartTime;
-            metatDataText = new Tuple<string, int, int>(afStartTimeText, 10, 38);
+            var afStartTimeText = "AF-START-TIME:   " + afStartTime;
+            metatDataText = new Tuple<string, int, int>(afStartTimeText, 11, 38);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show afEndTime
-            var afEndTimeText = "AF END TIME:     " + afEndTime;
-            metatDataText = new Tuple<string, int, int>(afEndTimeText, 10, 40);
+            var afEndTimeText = "AF-END-TIME:     " + afEndTime;
+            metatDataText = new Tuple<string, int, int>(afEndTimeText, 11, 40);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current latitude
             var latitudeText = "LATITUDE:    " + latitude.ToString("0.00000");
-            metatDataText = new Tuple<string, int, int>(latitudeText, 60, 36);
+            metatDataText = new Tuple<string, int, int>(latitudeText, 63, 36);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current longitude
             var longitudeText = "LONGITUDE:   " + longitude.ToString("0.00000");
-            metatDataText = new Tuple<string, int, int>(longitudeText, 60, 38);
+            metatDataText = new Tuple<string, int, int>(longitudeText, 63, 38);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var altitudeText = "ALTITUDE:    " + "15000m";
+            metatDataText = new Tuple<string, int, int>(altitudeText, 63, 40);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var groundSpeedText = "GROUND-SPEED:     " + "434kph";
+            metatDataText = new Tuple<string, int, int>(groundSpeedText, 106, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var verticalSpeedText = "VERTICAL-SPEED:   " + "50kph";
+            metatDataText = new Tuple<string, int, int>(verticalSpeedText, 106, 38);
             AsyncConsoleWriter.Write(metatDataText);
         }
 

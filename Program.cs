@@ -146,6 +146,7 @@ namespace ConsoleWorldMapPlotter
         public static void handleAfStartTimeInput()
         {
             if (_aircraftCallsignInputTask.IsCompleted
+                && _afStartTimeInputTask != null
                 && _afStartTimeInputTask.IsCompleted
                 && _afEndTimeInputTask == null
                 && !_afEndTimeInputCursorSet
@@ -204,10 +205,12 @@ namespace ConsoleWorldMapPlotter
             if (_mappingInputTask != null
                 && _mappingInputTask.IsCompleted)
             {
+                var mappingInputResult = _mappingInputTask.Result;
+
                 // EXIT MAP LOGIC
                 // -- only [ENTER] key was pressed without any textual input,
                 // so let's redisplay the splash screen, and cancel mapping tasks
-                if (_mappingInputTask.Result == "")
+                if (mappingInputResult == "")
                 {
                     // cancel mapping and point plotting tasks
                     _mapRunnerTaskCts.Cancel();
@@ -219,6 +222,13 @@ namespace ConsoleWorldMapPlotter
 
                     // gotta display the user prompt again, and reset flags
                     resetUserInputPrompt();
+                }
+
+                // currently can only quit from map lol
+                if (mappingInputResult == "q")
+                {
+                    Console.ResetColor();
+                    Environment.Exit(0);
                 }
             }
         }

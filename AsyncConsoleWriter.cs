@@ -34,6 +34,18 @@ namespace ConsoleWorldMapPlotter
                         continue;
                     }
 
+                    // change mapping metadatatable stuff cyan
+                    if (toWrite.Item1.Contains(":"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+
+                        Console.Write(toWrite.Item1);
+
+                        Console.ResetColor();
+
+                        continue;
+                    }
+
                     Console.Write(toWrite.Item1);
                 }
 
