@@ -11,7 +11,8 @@ namespace ConsoleWorldMapPlotter
     {
         public static void Display(bool doItSlow)
         {
-            Console.SetCursorPosition(0, 0);
+            // get those nice defaults back
+            Utilities.ResetConsoleDefaults();
 
             List<string> piInSkyLogo = new List<string>()
                 {

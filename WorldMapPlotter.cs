@@ -22,6 +22,9 @@ namespace ConsoleWorldMapPlotter
 
         public static void RunMap(CancellationToken cancelToken)
         {
+            // get those nice defaults back
+            Utilities.ResetConsoleDefaults();
+
             Task.Run(() =>
             {
 
