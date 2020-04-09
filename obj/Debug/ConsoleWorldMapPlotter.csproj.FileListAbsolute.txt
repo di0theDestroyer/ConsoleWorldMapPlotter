@@ -1,7 +1,0 @@
-D:\tempDev\ConsoleWorldMapPlotter\bin\Debug\ConsoleWorldMapPlotter.exe.config
-D:\tempDev\ConsoleWorldMapPlotter\bin\Debug\ConsoleWorldMapPlotter.exe
-D:\tempDev\ConsoleWorldMapPlotter\bin\Debug\ConsoleWorldMapPlotter.pdb
-D:\tempDev\ConsoleWorldMapPlotter\obj\Debug\ConsoleWorldMapPlotter.csprojAssemblyReference.cache
-D:\tempDev\ConsoleWorldMapPlotter\obj\Debug\ConsoleWorldMapPlotter.csproj.CoreCompileInputs.cache
-D:\tempDev\ConsoleWorldMapPlotter\obj\Debug\ConsoleWorldMapPlotter.exe
-D:\tempDev\ConsoleWorldMapPlotter\obj\Debug\ConsoleWorldMapPlotter.pdb

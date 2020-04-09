@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsoleWorldMapPlotter
 {
-    class GenerateData
+    public static class WorldMapPositionConverter_GenerateData
     {
         public static List<LatLong> Generate(double startLat, double startLong, int itemCnt, int randomizer)
         {

@@ -1,1 +1,8 @@
 *.lock
+*.exe
+*.pdb
+*.cache
+*.suo
+*.ide-wal
+bin/
+obj/
