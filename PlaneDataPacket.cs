@@ -18,6 +18,12 @@
 
         public int PlotY { get; set; }
 
+        public string Altitude { get; set; }
+
+        public string GroundSpeed { get; set; }
+
+        public string VerticalSpeed { get; set; }
+
         public PlaneDataPacket(
             string aircraftCallsign,
             string afStartTime,
@@ -26,7 +32,10 @@
             string longitude,
             string timestamp,
             int plotX,
-            int plotY
+            int plotY,
+            string altitude,
+            string groundSpeed,
+            string verticalSpeed
         )
         {
             AircraftCallsign = aircraftCallsign;
@@ -37,6 +46,9 @@
             Timestamp = timestamp;
             PlotX = plotX;
             PlotY = plotY;
+            Altitude = altitude;
+            GroundSpeed = groundSpeed;
+            VerticalSpeed = verticalSpeed;
         }
     }
 }

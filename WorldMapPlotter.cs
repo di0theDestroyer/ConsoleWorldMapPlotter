@@ -22,6 +22,50 @@ namespace ConsoleWorldMapPlotter
             _mapContents = File.ReadAllText(filePath);
         }
 
+        public static void UpdateMapMetaData(PlaneDataPacket planeDataPacket)
+        {
+            Tuple<string, int, int> metatDataText = null;
+
+
+            // show callsign
+            // coords 1, 36
+            var callsignText = "CALLSIGN:        " + planeDataPacket.AircraftCallsign;
+            metatDataText = new Tuple<string, int, int>(callsignText, 11, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show afStartTime
+            var afStartTimeText = "AF-START-TIME:   " + planeDataPacket.AfStartTime;
+            metatDataText = new Tuple<string, int, int>(afStartTimeText, 11, 38);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show afEndTime
+            var afEndTimeText = "AF-END-TIME:     " + planeDataPacket.AfEndTime;
+            metatDataText = new Tuple<string, int, int>(afEndTimeText, 11, 40);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show current latitude
+            var latitudeText = "LATITUDE:    " + planeDataPacket.Latitude;
+            metatDataText = new Tuple<string, int, int>(latitudeText, 63, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show current longitude
+            var longitudeText = "LONGITUDE:   " + planeDataPacket.Longitude;
+            metatDataText = new Tuple<string, int, int>(longitudeText, 63, 38);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var altitudeText = "ALTITUDE:    " + planeDataPacket.Altitude;
+            metatDataText = new Tuple<string, int, int>(altitudeText, 63, 40);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var groundSpeedText = "GROUND-SPEED:     " + planeDataPacket.GroundSpeed;
+            metatDataText = new Tuple<string, int, int>(groundSpeedText, 106, 36);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            var verticalSpeedText = "VERTICAL-SPEED:   " + planeDataPacket.VerticalSpeed;
+            metatDataText = new Tuple<string, int, int>(verticalSpeedText, 106, 38);
+            AsyncConsoleWriter.Write(metatDataText);
+        }
+
         public static void UpdateMapMetaData(string callsign, string afStartTime, string afEndTime, double latitude, double longitude)
         {
             Tuple<string, int, int> metatDataText = null;

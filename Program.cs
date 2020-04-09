@@ -30,7 +30,7 @@ namespace ConsoleWorldMapPlotter
 
         private static PlaneDataProvider _planeDataProvider;
 
-        private const bool GENERATE_REAL_DATA = false;
+        private const bool GENERATE_REAL_DATA = true;
 
         static void Main(string[] args)
         {

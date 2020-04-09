@@ -73,7 +73,10 @@ namespace ConsoleWorldMapPlotter
                         rawEntry.Value["Longitude"],
                         rawEntry.Key.ToString("MM/dd/yyyy h:mm tt"),
                         coordinatesPair[0].xCoord,
-                        coordinatesPair[0].yCoord
+                        coordinatesPair[0].yCoord,
+                        rawEntry.Value["Altitude"],
+                        rawEntry.Value["GroundSpeed"],
+                        rawEntry.Value["VerticalSpeed"]
                     );
 
                 planeDataPackets.Add(planeDataPacket);
