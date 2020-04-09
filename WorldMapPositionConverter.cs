@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsoleWorldMapPlotter
 {
-    class WorldMapPositionConverter
+    public class WorldMapPositionConverter
     {
         //longitude transfers to columns (x axis)
         //latitude transfers to rows (y axis)

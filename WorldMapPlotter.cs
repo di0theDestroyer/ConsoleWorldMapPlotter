@@ -8,8 +8,10 @@ namespace ConsoleWorldMapPlotter
 {
     public static class WorldMapPlotter
     {
+        public static int MAP_ROWS = 34;
+        public static int MAP_COLUMNS = 150;
         public const string AIRCRAFT_ICON = "@";
-        public const int MAP_REDRAW_FREQUENCY = 1000; // milliseconds
+        public const int MAP_REDRAW_FREQUENCY = 1100; // milliseconds
 
         private static string _mapContents = string.Empty;
 
@@ -22,6 +24,8 @@ namespace ConsoleWorldMapPlotter
 
         public static void RunMap(CancellationToken cancelToken)
         {
+            bool mapDrawn = false;
+
             // get those nice defaults back
             Utilities.ResetConsoleDefaults();
 
@@ -34,10 +38,14 @@ namespace ConsoleWorldMapPlotter
                 {
                     if (!cancelToken.IsCancellationRequested)
                     {
-                        // draw the map at 0,0
-                        var toDraw = new Tuple<string, int, int>(_mapContents, 0, 0);
 
-                        AsyncConsoleWriter.Write(toDraw);
+                        if (!mapDrawn)
+                        {
+                            // draw the map at 0,0
+                            var toDraw = new Tuple<string, int, int>(_mapContents, 0, 0);
+
+                            AsyncConsoleWriter.Write(toDraw);
+                        }
 
                         Thread.Sleep(MAP_REDRAW_FREQUENCY);
 
@@ -55,6 +63,7 @@ namespace ConsoleWorldMapPlotter
 
         public static void PlotPoint(int x, int y)
         {
+            // fly that lil plane
             var toPlot = new Tuple<string, int, int>(AIRCRAFT_ICON, x, y);
 
             AsyncConsoleWriter.Write(toPlot);
@@ -72,6 +81,14 @@ namespace ConsoleWorldMapPlotter
                     );
 
                 AsyncConsoleWriter.Write(toPlot);
+                
+                /*
+                //TO PLOT ALL POINTS INSTEAD MAKING THE PLANE FLYYYYYY
+                // COMMENT THESE TWO LINES 
+                // draw the map at 0,0
+                var toDraw = new Tuple<string, int, int>(_mapContents, 0, 0);
+                AsyncConsoleWriter.Write(toDraw);
+                */
             }
         }
     }

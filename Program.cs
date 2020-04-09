@@ -24,21 +24,21 @@ namespace ConsoleWorldMapPlotter
         static void Main(string[] args)
         {
             // DEBUG HACK -- MAXIMIZE CONSOLE WINDOW
+            // TODO: Configure screen size
             Maximize();
             //Console.SetWindowSize(150, 60);
 
-            // start off with the callsign!
-            _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
-
+            // awww yea. doItSlow.
             SplashScreen.Display(doItSlow: true);
 
-            //createMapRunnerTask();
-            //WorldMapPlotter_GenerateData.Generate();
+            // let's start things off right and get the callsign!
+            // note: all user input after this is handled with flags
+            //       in handleUserInput() and helper methods
+            _aircraftCallsignInputTask = AsyncConsoleReader.ReadLine();
 
             //Infinite loop to contiously keep reading in user input for callsign and time interval.
             while (true)
             {
-
                 /*
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("============================================================================");
@@ -49,26 +49,8 @@ namespace ConsoleWorldMapPlotter
                 Console.WriteLine("============================================================================");
                 */
 
-                //_userInputTask = AsyncConsoleReader.ReadLine();
-
-                // ONLY RUN THE SPLASH SCREEN IF WE'VE PRESSED [ENTER] DURING MAPPING
-
                 handleUserInput();
-
-                if (!_mapIsRunning && !_atSplashScreen)
-                {
-                    // if mapping tasks are !null, then don't create them again
-                    //   because the mapping feature is probably already running,
-                    //   but, otherwise create them
-                    createMapRunnerTask();
-                }
-
             }
-
-
-
-            
-            //WorldMapPositionConverter_GenerateData.Generate();
 
             Console.Read();
         }
@@ -133,7 +115,6 @@ namespace ConsoleWorldMapPlotter
                 && _afTimeRangeInputTask.IsCompleted
                 && _mappingInputTask == null)
             {
-
                 //START MAP LOGIC
 
                 // looks like we just got the afTimeRange from the user
@@ -164,14 +145,15 @@ namespace ConsoleWorldMapPlotter
             WorldMapPlotter.RunMap(_mapRunnerTaskCts.Token);
 
             // DEBUG -- leave it commented.
-            WorldMapPlotter_GenerateData.Generate(_pointPlotterTaskCts.Token);
+            WorldMapPlotter_GenerateData.Generate(
+                _pointPlotterTaskCts.Token, 
+                useLatLongGenerator: true
+            );
 
             _mapIsRunning = true;
         }
 
-
-
-        // BELOW IS JUST A DEBUG HACK TO MAXIMIZE THE CONSOLE
+        // EVERYTHING BELOW IS JUST A DEBUG HACK TO MAXIMIZE THE CONSOLE -- NOT NECESSARY IN PROD CODE
 
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(System.IntPtr hWnd, int cmdShow);
