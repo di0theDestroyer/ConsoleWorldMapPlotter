@@ -8,13 +8,98 @@ namespace ConsoleWorldMapPlotter
     public static class WorldMapPlotter_GenerateData
     {
         public static void GenerateRealData(
+            CancellationToken cancel,
             PlaneDataProvider planeDataProvider, 
-            string aircraftCallsign, 
+            string aircraftCallsign,
             string afStartTime, 
             string afEndTime
         )
         {
+            //
             // for PoC, just do lat, longs, on map and in metadatatable
+            //
+            // then later, add more cool metadata
+            //
+
+
+            IDictionary<DateTime, Dictionary<string,string>> planeData = 
+                planeDataProvider.GetPlaneDataInInterval(
+                    aircraftCallsign, 
+                    afStartTime, 
+                    afEndTime
+                );
+
+            var worldMapPositionConverter =
+                new WorldMapPositionConverter(
+                    WorldMapPlotter.MAP_COLUMNS,
+                    WorldMapPlotter.MAP_ROWS
+                );
+
+            var planeDataPackets = new List<PlaneDataPacket>();
+
+            // convert raw planData to PlaneDataPackets
+            foreach (var rawEntry in planeData)
+            {
+                // need this for conversion class
+                var latLong = new List<LatLong>()
+                {
+                    //TODO: error handle bad parse
+                    new LatLong(
+                        double.Parse(rawEntry.Value["Latitude"]), 
+                        double.Parse(rawEntry.Value["Longitude"])
+                    )
+                };
+
+                // TODO: why do i need these?
+                double centerLat = 0;
+                double centerLong = 0;
+
+                // need this for conversion class
+                List<Coordinates> coordinatesPair =
+                    worldMapPositionConverter.Convert(
+                        latLong,
+                        out centerLat,
+                        out centerLong
+                    );
+
+                // create our PlaneDataPacket object!!!
+                var planeDataPacket =
+                    new PlaneDataPacket(
+                        aircraftCallsign,
+                        afStartTime,
+                        afEndTime,
+                        rawEntry.Value["Latitude"],
+                        rawEntry.Value["Longitude"],
+                        rawEntry.Key.ToString("MM/dd/yyyy h:mm tt"),
+                        coordinatesPair[0].xCoord,
+                        coordinatesPair[0].yCoord
+                    );
+
+                planeDataPackets.Add(planeDataPacket);
+            }
+
+
+            foreach (var planeDataPacket in planeDataPackets)
+            {
+                if (!cancel.IsCancellationRequested)
+                {
+                    WorldMapPlotter.PlotPoint(
+                        planeDataPacket.PlotX,
+                        planeDataPacket.PlotY
+                    );
+
+                    // update the lower part of the screen
+                    WorldMapPlotter.UpdateMapMetaData(
+                        planeDataPacket.AircraftCallsign, 
+                        planeDataPacket.AfStartTime, 
+                        planeDataPacket.AfEndTime,
+                        double.Parse(planeDataPacket.Latitude),
+                        double.Parse(planeDataPacket.Longitude)
+                    );
+                }
+
+                Thread.Sleep(700);
+            }
 
         }
 
@@ -117,7 +202,7 @@ namespace ConsoleWorldMapPlotter
 
 
                                 // update the lower part of the screen
-                                WorldMapPlotter.UpdateMapMetaData("somecallsign", "sometimerange", 10.0000, -10.0000);
+                                WorldMapPlotter.UpdateMapMetaData("somecallsign", "someafstarttime", "someafendtime", 10, -10);
                             }
                             
                             Thread.Sleep(700);

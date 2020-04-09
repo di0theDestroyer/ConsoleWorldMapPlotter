@@ -240,6 +240,7 @@ namespace ConsoleWorldMapPlotter
                 // real data
 
                 WorldMapPlotter_GenerateData.GenerateRealData(
+                    _pointPlotterTaskCts.Token,
                     _planeDataProvider, 
                     _aircraftCallsign, 
                     _afStartTime, 

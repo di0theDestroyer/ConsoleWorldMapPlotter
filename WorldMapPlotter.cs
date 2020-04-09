@@ -22,7 +22,7 @@ namespace ConsoleWorldMapPlotter
             _mapContents = File.ReadAllText(filePath);
         }
 
-        public static void UpdateMapMetaData(string callsign, string afTimeRange, double latitude, double longitude)
+        public static void UpdateMapMetaData(string callsign, string afStartTime, string afEndTime, double latitude, double longitude)
         {
             Tuple<string, int, int> metatDataText = null;
 
@@ -32,9 +32,14 @@ namespace ConsoleWorldMapPlotter
             metatDataText = new Tuple<string, int, int>(callsignText, 1, 36);
             AsyncConsoleWriter.Write(metatDataText);
 
-            // show AFTime range
-            var afTimeRangeText = "AF TIME RANGE:   " + afTimeRange;
-            metatDataText = new Tuple<string, int, int>(afTimeRangeText, 1, 37);
+            // show afStartTime
+            var afStartTimeText = "AF START TIME:   " + afStartTime;
+            metatDataText = new Tuple<string, int, int>(afStartTimeText, 1, 37);
+            AsyncConsoleWriter.Write(metatDataText);
+
+            // show afEndTime
+            var afEndTimeText = "AF END TIME:     " + afEndTime;
+            metatDataText = new Tuple<string, int, int>(afEndTimeText, 1, 37);
             AsyncConsoleWriter.Write(metatDataText);
 
             // show current latitude
